@@ -35,8 +35,8 @@ roomController.get('/find/:id',verifyToken , async(req,res)=>{
         
     }
 })
-/////////////////apres frontenttypes
-roomController.get('/find/types', async (req, res) => {
+///////////////apres frontenttypes
+roomController.post('/find/types', async (req, res) => {
     try {
       const apartment = await Room.find({ type: 'apartment' }).countDocuments();
       const villa = await Room.find({ type: 'villa' }).countDocuments();
@@ -50,6 +50,26 @@ roomController.get('/find/types', async (req, res) => {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+  
+//get types and their corresponding numbers
+roomController.get('/find/types', async (req, res) => {
+    try {
+        // Query the Room collection to count documents with the specified type
+        // Each countDocuments call returns the number of rooms of a specific type
+        const apartment = await Room.find({ type: 'apartment' }).countDocuments();
+        const villa = await Room.find({ type: 'villa' }).countDocuments();
+        const penthouse = await Room.find({ type: 'penthouse' }).countDocuments();
+        const bungalow = await Room.find({ type: 'bungalow' }).countDocuments();
+
+        // Return the counts of each room type as a JSON response
+        return res.status(200).json({ apartment, villa, penthouse, bungalow });
+    } catch (error) {
+        // If an error occurs during the query, log it and return a 500 error response
+        console.error(error.message);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
   
 
 //create
